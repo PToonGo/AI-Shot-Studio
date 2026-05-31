@@ -1,0 +1,8 @@
+{
+  "name": "AI SHOT STUDIO",
+  "description": "High-resolution camera movement directory and prompt generator for AI video creators.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
