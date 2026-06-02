@@ -4,13 +4,23 @@
  */
 
 export type MovementCategory = 'All' | 'Dolly/Track' | 'Zoom/Lens' | 'Drone/Crane' | 'Pan/Tilt';
+export type LookCategory = 'All' | 'Cinema Legends' | 'Film Stocks' | 'Lighting' | 'Stylized & Abstract';
+
+export interface CinematicLook {
+  id: string;
+  title: string;
+  category: LookCategory;
+  description: string;
+  video: string;
+  videoFull?: string;
+}
 
 export interface CameraMovement {
   id: string;
   title: string;
   category: MovementCategory;
   description: string;
-  image: string;
+  image?: string;
   alt: string;
   video?: string;
   videoFull?: string;

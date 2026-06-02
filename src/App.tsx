@@ -5,14 +5,15 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { CameraMovement, MovementCategory, PromptResponse } from './types';
-import { CAMERA_MOVEMENTS } from './data';
+import { CameraMovement, MovementCategory, PromptResponse, LookCategory, CinematicLook } from './types';
+import { CAMERA_MOVEMENTS, CINEMATIC_LOOKS } from './data';
 import MovementDetail from './components/MovementDetail';
 import { 
   Search, 
   Sparkles, 
   ArrowRight, 
   Youtube, 
+  Facebook,
   GraduationCap, 
   Compass, 
   HelpCircle, 
@@ -36,6 +37,27 @@ export default function App() {
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 1500);
   };
+  
+  // Cinematic Looks states
+  const [selectedLookCategory, setSelectedLookCategory] = useState<LookCategory>('All');
+  const [lookSearchQuery, setLookSearchQuery] = useState('');
+  const [copiedLookId, setCopiedLookId] = useState<string | null>(null);
+
+  const handleCopyLook = (e: React.MouseEvent, id: string, text: string) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(text);
+    setCopiedLookId(id);
+    setTimeout(() => setCopiedLookId(null), 1500);
+  };
+
+  const filteredLooks = CINEMATIC_LOOKS.filter((l) => {
+    const matchesCategory = selectedLookCategory === 'All' || l.category === selectedLookCategory;
+    const matchesSearch = 
+      l.title.toLowerCase().includes(lookSearchQuery.toLowerCase()) || 
+      l.description.toLowerCase().includes(lookSearchQuery.toLowerCase()) || 
+      l.category.toLowerCase().includes(lookSearchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
   
   // AI Prompt Synthesizer states
   const [aiLoading, setAiLoading] = useState(false);
@@ -111,66 +133,46 @@ export default function App() {
       </div>
 
       {/* 1. HEADER SECTION */}
-      <header className="relative z-10 border-b border-white/10 bg-[#0E1015]/85 backdrop-blur-md sticky top-0" id="main-studio-header">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0E1015]/50 backdrop-blur-lg" id="main-studio-header">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-[30px] flex items-center justify-between gap-4 relative">
           
           {/* Top-Left Logo Block */}
-          <div className="flex items-center gap-3 shrink-0 select-none">
-            <div className="relative w-11 h-11 flex items-center justify-center">
+          <div className="flex items-center gap-3.5 shrink-0 select-none">
+            <div className="relative w-14 h-14 flex items-center justify-center">
               {/* Hexagonal stylized gradient background */}
               <div className="absolute inset-0 bg-gradient-to-tr from-purple-600 via-indigo-600 to-blue-500 rounded-lg transform rotate-45 border border-purple-400/20 shadow-[0_0_15px_rgba(168,85,247,0.25)]" />
               <div className="absolute inset-[1.5px] bg-[#0E1015] rounded-lg transform rotate-45 flex items-center justify-center">
-                <div className="w-2.5 h-2.5 rounded-full bg-gradient-to-tr from-purple-400 to-blue-400 animate-pulse" />
+                <div className="w-3.5 h-3.5 rounded-full bg-gradient-to-tr from-purple-400 to-blue-400 animate-pulse" />
               </div>
             </div>
             <div className="flex flex-col text-left leading-none">
-              <span className="text-sm font-black text-white tracking-[0.25em] leading-none uppercase">AI SHOT</span>
-              <span className="text-[10px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 tracking-widest uppercase mt-0.5">STUDIO</span>
+              <span className="text-lg font-black text-white tracking-[0.25em] leading-none uppercase">AI SHOT</span>
+              <span className="text-[13px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 tracking-widest uppercase mt-0.5">P-TOONGO STUDIO</span>
             </div>
           </div>
 
+          {/* Centered Image in Header */}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10 flex items-center justify-center">
+            <img 
+              src="/assets/Logo-PToonGo.png" 
+              alt="Quang Phuong Master Header" 
+              className="h-[62px] w-auto object-contain rounded-md"
+              referrerPolicy="no-referrer"
+            />
+          </div>
+
           {/* Center Dynamic Banner Ad Area */}
-          <div className="hidden md:flex flex-1 max-w-xl lg:max-w-2xl bg-gradient-to-r from-purple-950/25 via-[#13141E]/95 to-[#0E1015] border border-white/5 rounded-xl overflow-hidden px-4 py-2.5 items-center justify-between gap-4">
-            <div className="flex items-center gap-3 shrink-0">
-              <span className="bg-red-500/15 text-red-400 font-mono text-[9px] px-2 py-0.5 rounded border border-red-500/25 font-bold uppercase tracking-wider">
-                COACHING ACT
-              </span>
-              <span className="text-xs font-bold text-white tracking-wide font-mono">
-                300M+ VIEWS
-              </span>
-            </div>
-            <div className="h-4 w-px bg-white/10 hidden lg:block" />
-            <p className="text-[11px] text-gray-400 hidden lg:block truncate select-none">
-              Master camera directors for Sora, Luma & Runway
-            </p>
+          <div className="hidden md:flex flex-1 max-w-xl lg:max-w-2xl bg-[#13141E]/95 border border-white/5 rounded-xl overflow-hidden px-4 py-2.5 items-center justify-end gap-4">
             <button
               onClick={() => setShowLearningHub(true)}
               className="flex items-center gap-1.5 text-xs bg-red-600 hover:bg-red-500 active:bg-red-700 text-white font-bold px-3 py-1.5 rounded-md transition-all shadow-[0_0_15px_rgba(239,68,68,0.2)] tracking-wider shrink-0 cursor-pointer"
             >
-              <span>LEARN HOW</span>
+              <span>DISCOVER NOW</span>
               <Play className="w-3 h-3 fill-current" />
             </button>
           </div>
 
-          {/* Top-Right Navigation buttons */}
-          <div className="flex items-center gap-2.5 shrink-0">
-            <a 
-              href="https://youtube.com" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="flex items-center gap-2 bg-white hover:bg-gray-100 text-[#0F1015] text-[11px] font-bold px-3.5 py-2.5 rounded-md transition-all font-sans"
-            >
-              <Youtube className="w-3.5 h-3.5 text-red-600 fill-current" />
-              <span className="hidden sm:inline">YouTube</span>
-            </a>
-            <button
-              onClick={() => setShowLearningHub(true)}
-              className="flex items-center gap-2 bg-white hover:bg-gray-100 text-[#0F1015] text-[11px] font-bold px-3.5 py-2.5 rounded-md transition-all font-sans cursor-pointer"
-            >
-              <GraduationCap className="w-3.5 h-3.5 text-purple-600" />
-              <span>AI Academy</span>
-            </button>
-          </div>
+
 
         </div>
       </header>
@@ -183,12 +185,12 @@ export default function App() {
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
-              className="w-full max-w-md h-screen bg-[#111217] border-l border-white/10 p-6 flex flex-col justify-between shadow-2xl relative"
+              className="w-full max-w-md h-screen bg-[#111217]/50 backdrop-blur-lg border-l border-white/10 p-6 flex flex-col justify-between shadow-2xl relative"
             >
               <div>
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                    <GraduationCap className="w-5 h-5 text-purple-400" /> AI Cinematography Academy
+                    <GraduationCap className="w-5 h-5 text-purple-400" /> Quang Phuong Master
                   </h3>
                   <button 
                     onClick={() => setShowLearningHub(false)}
@@ -200,26 +202,34 @@ export default function App() {
 
                 <div className="space-y-4 text-sm flex-1">
                   <div className="p-4 bg-white/5 border border-white/5 rounded-xl">
-                    <span className="text-[10px] uppercase font-mono text-purple-400 font-bold block mb-1">Module 01</span>
-                    <h4 className="font-semibold text-white mb-1">Introduction to Prompting Physics</h4>
+                    <span className="text-[10px] uppercase font-mono text-purple-400 font-bold block mb-1">P-ToonGo Studio 🎥</span>
+                    <h4 className="font-semibold text-white mb-1">Introduction to P-ToonGo Studio</h4>
                     <p className="text-xs text-gray-400 leading-relaxed">
-                      AI video engines do not understand general camera movements without specific temporal physics tags. Learn to combine velocity markers with motion parameters.
+                      You will travel with me to experience many countries around the world: Asia, Europe, Australia, America, and even far-off Africa. Let's journey into dreams together with short animated films and share knowledge about AI technology.
                     </p>
                   </div>
 
                   <div className="p-4 bg-white/5 border border-white/5 rounded-xl">
-                    <span className="text-[10px] uppercase font-mono text-purple-400 font-bold block mb-1">Module 02</span>
-                    <h4 className="font-semibold text-white mb-1">Mastering Dolly & Drone Parallax</h4>
+                    <span className="text-[10px] uppercase font-mono text-purple-400 font-bold block mb-1">Channel 01</span>
+                    <h4 className="font-semibold text-white mb-1">Experiential tourism channel</h4>
                     <p className="text-xs text-gray-400 leading-relaxed">
-                      To optimize parallax depth, place distinct layered targets (foreground, midground, background) to allow AI engines to render flawless relative movement.
+                      P-ToonGo Travel explores countries around the world through unique journeys, cultures, and cuisines. Experience and discover the world with each trip. 🌍✈️
                     </p>
                   </div>
 
                   <div className="p-4 bg-white/5 border border-white/5 rounded-xl">
-                    <span className="text-[10px] uppercase font-mono text-purple-400 font-bold block mb-1">Module 03</span>
-                    <h4 className="font-semibold text-white mb-1">Engine Adaptability Controls</h4>
+                    <span className="text-[10px] uppercase font-mono text-purple-400 font-bold block mb-1">Channel 02</span>
+                    <h4 className="font-semibold text-white mb-1">Entertainment and Educational Cartoon Channel</h4>
                     <p className="text-xs text-gray-400 leading-relaxed">
-                      Sora excels at highly detailed lens descriptions; Runway Gen-3 demands exact velocity metrics; Luma prefers active present-progressive verb bindings.
+                      P-ToonGo Animation offers entertaining and educational animated films. Each story is a meaningful lesson about life, skills, and positive human values. 🎬✨👧🧒
+                    </p>
+                  </div>
+
+                  <div className="p-4 bg-white/5 border border-white/5 rounded-xl">
+                    <span className="text-[10px] uppercase font-mono text-purple-400 font-bold block mb-1">Channel 03</span>
+                    <h4 className="font-semibold text-white mb-1">AI Technology Exchange Channel</h4>
+                    <p className="text-xs text-gray-400 leading-relaxed">
+                      P-ToonGo AI shares the latest AI knowledge, tools, and trends. Discover how AI is changing work, learning, and life. 🤖🚀
                     </p>
                   </div>
                 </div>
@@ -244,8 +254,8 @@ export default function App() {
         {/* HERO TITLE BLOCK */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/5 pb-6">
           <div className="space-y-2 select-none">
-            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
-              42 Camera Movements for AI Video Prompts
+            <h1 className="text-[21px] sm:text-[25px] font-extrabold tracking-tight leading-tight animated-gradient-text">
+              44 Camera Movements for AI Video Prompts
             </h1>
             <p className="text-sm text-gray-400 max-w-2xl leading-relaxed">
               Explore professional cinematographic formulas, dynamic vector previews, and custom prompt templates optimized for state-of-the-art AI video generation engines.
@@ -353,6 +363,8 @@ export default function App() {
                         loop 
                         muted 
                         playsInline 
+                        preload="auto"
+                        poster={movement.image}
                         src={movement.video}
                         data-src={movement.video} 
                         data-full-src={movement.videoFull} 
@@ -419,10 +431,156 @@ export default function App() {
           </button>
         </section>
 
+        {/* 5. CINEMATIC LOOKS & LIGHTING SECTION */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/5 pb-6 mt-16 scroll-mt-24 animate-fadeIn" id="looks-lighting-section">
+          <div className="space-y-2 select-none">
+            <h2 className="text-[21px] sm:text-[25px] font-extrabold tracking-tight leading-tight animated-gradient-text uppercase">
+              27 Cinematic Looks & Lighting for AI Video Prompts
+            </h2>
+            <p className="text-sm text-gray-400 max-w-2xl leading-relaxed">
+              Explore advanced visual styles, legendary film emulsions, ambient color charts, and lighting profiles to design stunning atmospheric settings.
+            </p>
+          </div>
+        </div>
+
+        {/* LOOKS CONTROLS */}
+        <div className="space-y-6">
+          {/* Centered Look Search Input Bar */}
+          <div className="max-w-2xl mx-auto relative group">
+            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-purple-400 transition-colors">
+              <Search className="w-5 h-5" />
+            </div>
+            <input
+              type="text"
+              value={lookSearchQuery}
+              onChange={(e) => setLookSearchQuery(e.target.value)}
+              placeholder="Search aesthetics (e.g. 'Cyberpunk', 'Neon', 'Vintage')..."
+              className="w-full bg-[#121319] hover:bg-[#161720]/80 focus:bg-[#161720] border border-white/10 focus:border-purple-500 rounded-full py-4 pl-12 pr-6 text-sm text-white placeholder-gray-500 focus:outline-none focus:shadow-[0_0_20px_rgba(168,85,247,0.15)] transition-all"
+            />
+          </div>
+
+          {/* Pill Look Filter Buttons */}
+          <div className="flex flex-wrap items-center justify-center gap-2.5 py-1">
+            {(['All', 'Cinema Legends', 'Film Stocks', 'Lighting', 'Stylized & Abstract'] as LookCategory[]).map((cat) => {
+              const active = selectedLookCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedLookCategory(cat)}
+                  className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-200 cursor-pointer ${
+                    active 
+                      ? 'bg-white text-[#0B0C10] shadow-lg font-bold scale-[1.03]' 
+                      : 'bg-[#121319] hover:bg-[#1C1D26] text-gray-400 hover:text-white border border-white/5'
+                  }`}
+                >
+                  {cat}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* LOOKS GRID */}
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xs font-mono uppercase text-gray-400 tracking-widest flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-purple-400" /> VISUAL LOOKS CATALOG ({filteredLooks.length} FOUND)
+            </h3>
+            <span className="text-[10px] text-gray-500 font-mono">
+              Click copy icon on any card to copy aesthetic formula
+            </span>
+          </div>
+
+          {filteredLooks.length === 0 ? (
+            <div className="text-center py-20 bg-[#121319] border border-white/5 rounded-2xl">
+              <Sparkles className="w-10 h-10 text-gray-600 mx-auto mb-3" />
+              <p className="text-gray-400 font-medium mb-1">No cinematic looks found matching &quot;{lookSearchQuery}&quot;</p>
+              <button 
+                onClick={() => { setLookSearchQuery(''); setSelectedLookCategory('All'); }}
+                className="text-xs text-purple-400 hover:underline hover:text-purple-300 transition-colors"
+              >
+                Clear all active search queries and filters
+              </button>
+            </div>
+          ) : (
+            <div className="movement-grid" id="looksGrid">
+              {filteredLooks.map((look, idx) => {
+                return (
+                  <motion.div
+                    key={look.id}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: Math.min(idx * 0.05, 0.4), duration: 0.3 }}
+                    onMouseEnter={(e) => {
+                      const video = e.currentTarget.querySelector('video');
+                      if (video) {
+                        video.play().catch(err => console.log("Hover play blocked:", err));
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      const video = e.currentTarget.querySelector('video');
+                      if (video) {
+                        video.pause();
+                      }
+                    }}
+                    className="move-card"
+                    data-category={look.category === 'Cinema Legends' ? 'legends' : look.category === 'Film Stocks' ? 'film-stocks' : look.category === 'Lighting' ? 'lighting' : 'stylized'}
+                    style={{ display: 'flex' }}
+                  >
+                    <div className="video-wrapper">
+                      <video 
+                        className="smart-video" 
+                        loop 
+                        muted 
+                        playsInline 
+                        preload="auto"
+                        src={look.video}
+                        data-src={look.video} 
+                        data-full-src={look.videoFull} 
+                      />
+                    </div>
+                    <div className="card-content">
+                      <h3 
+                        className="move-name fusion-responsive-typography-calculated" 
+                        data-fontsize="28" 
+                        data-lineheight="33.6px" 
+                        style={{ '--fontSize': 28, lineHeight: 1.2 } as any}
+                      >
+                        {look.title}
+                      </h3>
+                      <div className="prompt-container">
+                        <div className="prompt-box">
+                          {look.description}
+                        </div>
+                        <button 
+                          className="copy-icon-btn" 
+                          onClick={(e) => handleCopyLook(e, look.id, look.description)}
+                          title="Copy aesthetic prompt"
+                        >
+                          {copiedLookId === look.id ? (
+                            <svg viewBox="0 0 24 24" className="icon-check">
+                              <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                          ) : (
+                            <svg viewBox="0 0 24 24" className="icon-copy">
+                              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
       </main>
 
       {/* FOOTER METRIC BRAND BANNER */}
-      <footer className="border-t border-white/5 bg-[#08090C] py-8 mt-20 relative z-10 select-none">
+      <footer className="border-t border-white/5 bg-[#08090C] pt-8 pb-[30px] mt-20 relative z-10 select-none">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-mono text-gray-500">
           <div className="flex items-center gap-2">
             <span className="text-purple-500 font-bold">&bull;</span>
@@ -432,6 +590,42 @@ export default function App() {
             <span className="text-gray-400 font-semibold">42 MOVEMENT FORMULAS ACTIVE</span>
             <span>|</span>
             <span>HOSTED ON GOOGLE CLOUD INGRESS</span>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 mt-6 pt-6 border-t border-white/5">
+          <div className="text-xs sm:text-sm font-sans italic font-bold select-none tracking-wide">
+            <span className="shimmer-blue-text">
+              Copyright by NGUYEN QUANG PHUONG<sup className="relative -top-1.5 text-[0.75em] ml-0.5">&reg;</sup>
+            </span>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <a 
+              href="https://www.youtube.com/@QuangPhuongNguyen-PTG" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="flex items-center gap-2 bg-white hover:bg-gray-100 text-[#0F1015] text-[11px] font-bold px-3.5 py-2 rounded-md transition-all font-sans"
+            >
+              <Youtube className="w-3.5 h-3.5 text-red-600 fill-current" />
+              <span>YouTube</span>
+            </a>
+            <a 
+              href="https://facebook.com" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="flex items-center gap-2 bg-white hover:bg-gray-100 text-[#0F1015] text-[11px] font-bold px-3.5 py-2 rounded-md transition-all font-sans"
+            >
+              <Facebook className="w-3.5 h-3.5 text-blue-600 fill-current" />
+              <span>Facebook</span>
+            </a>
+            <a 
+              href="https://zalo.me" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="flex items-center gap-2 bg-white hover:bg-gray-100 text-[#0F1015] text-[11px] font-bold px-3.5 py-2 rounded-md transition-all font-sans"
+            >
+              <span className="w-3.5 h-3.5 bg-[#0068FF] rounded-full flex items-center justify-center text-[8px] font-black text-white font-sans">Z</span>
+              <span>Zalo</span>
+            </a>
           </div>
         </div>
       </footer>
