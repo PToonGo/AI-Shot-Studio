@@ -241,3 +241,71 @@ body {
   scrollbar-color: rgba(255, 255, 255, 0.08) #0b0c10;
 }
 
+/* HIGH-PERFORMANCE SCREEN HIGHLIGHT GLOWS AND FLOWING NAVIGATION STATES */
+@keyframes activeFlowGlow {
+  0% {
+    background-color: rgba(168, 85, 247, 0.08);
+    border-color: rgba(168, 85, 247, 0.25);
+    box-shadow: 0 0 6px rgba(168, 85, 247, 0.15), inset 0 0 3px rgba(168, 85, 247, 0.05);
+  }
+  50% {
+    background-color: rgba(168, 85, 247, 0.18);
+    border-color: rgba(168, 85, 247, 0.7);
+    box-shadow: 0 0 16px rgba(168, 85, 247, 0.45), inset 0 0 8px rgba(168, 85, 247, 0.15);
+  }
+  100% {
+    background-color: rgba(168, 85, 247, 0.08);
+    border-color: rgba(168, 85, 247, 0.25);
+    box-shadow: 0 0 6px rgba(168, 85, 247, 0.15), inset 0 0 3px rgba(168, 85, 247, 0.05);
+  }
+}
+
+@keyframes indigoFlowGlow {
+  0% {
+    background-color: rgba(99, 102, 241, 0.08);
+    border-color: rgba(99, 102, 241, 0.25);
+    box-shadow: 0 0 6px rgba(99, 102, 241, 0.15), inset 0 0 3px rgba(99, 102, 241, 0.05);
+  }
+  50% {
+    background-color: rgba(99, 102, 241, 0.18);
+    border-color: rgba(99, 102, 241, 0.7);
+    box-shadow: 0 0 16px rgba(99, 102, 241, 0.45), inset 0 0 8px rgba(99, 102, 241, 0.15);
+  }
+  100% {
+    background-color: rgba(99, 102, 241, 0.08);
+    border-color: rgba(99, 102, 241, 0.25);
+    box-shadow: 0 0 6px rgba(99, 102, 241, 0.15), inset 0 0 3px rgba(99, 102, 241, 0.05);
+  }
+}
+
+@keyframes blueFlowGlow {
+  0% {
+    background-color: rgba(59, 130, 246, 0.08);
+    border-color: rgba(59, 130, 246, 0.25);
+    box-shadow: 0 0 6px rgba(59, 130, 246, 0.15), inset 0 0 3px rgba(59, 130, 246, 0.05);
+  }
+  50% {
+    background-color: rgba(59, 130, 246, 0.18);
+    border-color: rgba(59, 130, 246, 0.7);
+    box-shadow: 0 0 16px rgba(59, 130, 246, 0.45), inset 0 0 8px rgba(59, 130, 246, 0.15);
+  }
+  100% {
+    background-color: rgba(59, 130, 246, 0.08);
+    border-color: rgba(59, 130, 246, 0.25);
+    box-shadow: 0 0 6px rgba(59, 130, 246, 0.15), inset 0 0 3px rgba(59, 130, 246, 0.05);
+  }
+}
+
+.glow-purple-active {
+  animation: activeFlowGlow 3s ease-in-out infinite;
+}
+
+.glow-indigo-active {
+  animation: indigoFlowGlow 3s ease-in-out infinite;
+}
+
+.glow-blue-active {
+  animation: blueFlowGlow 3s ease-in-out infinite;
+}
+
+
