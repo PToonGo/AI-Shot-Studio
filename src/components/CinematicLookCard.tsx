@@ -24,11 +24,20 @@ export default function CinematicLookCard({
   const cardRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const handleMouseEnter = () => {
+  const handleTrigger = (e?: React.MouseEvent) => {
+    if (e) {
+      const target = e.target as HTMLElement;
+      if (target.closest('.copy-icon-btn')) {
+        return;
+      }
+    }
     if (videoRef.current) {
-      // Ensure source is loaded and play immediately on hover
-      videoRef.current.play().catch((err) => {
-        console.log("Hover automatic play prevented:", err);
+      const video = videoRef.current;
+      if (video.readyState === 0) {
+        video.load();
+      }
+      video.play().catch((err) => {
+        console.log("Autoplay prevented:", err);
       });
     }
   };
@@ -53,8 +62,9 @@ export default function CinematicLookCard({
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: Math.min(idx * 0.05, 0.4), duration: 0.3 }}
-      onMouseEnter={handleMouseEnter}
+      onMouseEnter={handleTrigger}
       onMouseLeave={handleMouseLeave}
+      onClick={handleTrigger}
       className="move-card"
       data-category={categoryClean}
       style={{ display: 'flex' }}
