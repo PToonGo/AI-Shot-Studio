@@ -257,12 +257,17 @@ body {
 .logo-blue-glow {
   animation: blueglowing 3s ease-in-out infinite;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: filter, transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+  image-rendering: -webkit-optimize-contrast;
 }
 
 .logo-blue-glow:hover {
   animation: none;
   filter: drop-shadow(0 0 22px rgba(59, 130, 246, 1)) drop-shadow(0 0 44px rgba(37, 99, 235, 0.9)) brightness(1.4);
-  transform: scale(1.06);
+  transform: scale(1.06) translate3d(0, 0, 0);
 }
 
 

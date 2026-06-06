@@ -158,6 +158,9 @@ export default function App() {
               alt="Quang Phuong Master Header" 
               className="h-[62px] w-auto object-contain rounded-md logo-blue-glow pointer-events-auto cursor-pointer"
               referrerPolicy="no-referrer"
+              decoding="async"
+              loading="eager"
+              fetchPriority="high"
             />
           </div>
 
