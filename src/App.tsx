@@ -8,6 +8,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { CameraMovement, MovementCategory, PromptResponse, LookCategory, CinematicLook } from './types';
 import { CAMERA_MOVEMENTS, CINEMATIC_LOOKS } from './data';
 import MovementDetail from './components/MovementDetail';
+// @ts-ignore
+import logoUrl from '../assets/Logo-PToonGo.png';
 import { 
   Search, 
   Sparkles, 
@@ -154,7 +156,7 @@ export default function App() {
           {/* Centered Image in Header */}
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10 flex items-center justify-center">
             <img 
-              src="/assets/Logo-PToonGo.png" 
+              src={logoUrl} 
               alt="Quang Phuong Master Header" 
               className="h-[62px] w-auto object-contain rounded-md logo-blue-glow pointer-events-auto cursor-pointer"
               referrerPolicy="no-referrer"
