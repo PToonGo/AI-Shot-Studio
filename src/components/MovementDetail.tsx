@@ -129,10 +129,10 @@ export default function MovementDetail({
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 15 }}
         id="director-panel-root"
-        className="relative w-full max-w-5xl h-[85vh] max-h-[850px] bg-[#121318] border border-white/10 rounded-2xl overflow-hidden flex flex-col shadow-2xl"
+        className="relative w-full max-w-5xl h-[85vh] max-h-[850px] bg-[#202020] border border-white/10 rounded-2xl overflow-hidden flex flex-col shadow-2xl"
       >
         {/* Panel Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#161822]">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#202020]/90">
           <div className="flex items-center gap-3">
             <span className="text-xs font-mono px-2.5 py-1 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20 uppercase tracking-widest">
               {movement.category}
@@ -152,7 +152,7 @@ export default function MovementDetail({
         <div className="flex-1 overflow-y-auto grid grid-cols-1 lg:grid-cols-12 gap-0 divide-y lg:divide-y-0 lg:divide-x divide-white/5">
           
           {/* LEFT COLUMN: Visual Simulator & Customize Subject */}
-          <div className="lg:col-span-5 p-6 flex flex-col gap-5 bg-[#0F1014]">
+          <div className="lg:col-span-5 p-6 flex flex-col gap-5 bg-[#202020]">
             
             {/* Perspective Simulation Window / Sample Video Toggle */}
             <div>
@@ -317,7 +317,7 @@ export default function MovementDetail({
                 onChange={(e) => setCustomSubject(e.target.value)}
                 placeholder="Describe your subject, scene settings, lights, and art style..."
                 rows={3}
-                className="w-full bg-[#1A1C24] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-all resize-none"
+                className="w-full bg-[#222222] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-all resize-none"
               />
               <p className="text-[11px] text-gray-400 select-none">
                 Default variables are matched dynamically inside the prompt framework. Feel free to override!
@@ -346,7 +346,7 @@ export default function MovementDetail({
                 </button>
               </div>
 
-              <div className="relative bg-[#0A0B0E] border border-white/10 rounded-xl p-4 font-mono text-xs text-gray-300 leading-relaxed block overflow-hidden">
+              <div className="relative bg-[#222222] border border-white/10 rounded-xl p-4 font-mono text-xs text-gray-300 leading-relaxed block overflow-hidden">
                 <div className="absolute top-0 right-0 w-8 h-8 pointer-events-none bg-gradient-to-bl from-white/5 to-transparent rounded-bl-xl" />
                 {getCustomizedLocalPrompt()}
               </div>
@@ -362,7 +362,7 @@ export default function MovementDetail({
             </div>
 
             {/* LIVE AI SYNTHESIS FORM */}
-            <div className="bg-[#171923] border border-purple-500/25 rounded-2xl p-5 flex flex-col gap-4">
+            <div className="bg-[#444444]/40 border border-purple-500/25 rounded-2xl p-5 flex flex-col gap-4">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-semibold text-white flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-purple-400 animate-pulse" /> Live Hollywood AI Prompt Synthesizer
@@ -384,7 +384,7 @@ export default function MovementDetail({
                   <select
                     value={aiEngine}
                     onChange={(e: any) => setAiEngine(e.target.value)}
-                    className="w-full bg-[#202230] border border-white/10 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-purple-500 transition-all cursor-pointer"
+                    className="w-full bg-[#222222] border border-white/10 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-purple-500 transition-all cursor-pointer"
                   >
                     <option value="sora">OpenAI Sora (Multi-sentence detailed)</option>
                     <option value="runway">Runway Gen-3 Alpha (Physics & speed)</option>
@@ -402,7 +402,7 @@ export default function MovementDetail({
                     value={advancedDirectives}
                     onChange={(e) => setAdvancedDirectives(e.target.value)}
                     placeholder="e.g. 'rainy sunset', 'volumetric fog', '35mm anamorphic'"
-                    className="w-full bg-[#202230] border border-white/10 rounded-xl px-3.5 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-all"
+                    className="w-full bg-[#222222] border border-white/10 rounded-xl px-3.5 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-all"
                   />
                 </div>
               </div>

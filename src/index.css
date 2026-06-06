@@ -7,7 +7,7 @@
 }
 
 body {
-  background-color: #0b0c10;
+  background-color: #333333;
   color: #f1f1f1;
   font-family: var(--font-sans);
 }
@@ -38,7 +38,7 @@ body {
   height: 100%;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.05);
-  background-color: #121319;
+  background-color: #202020;
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
@@ -115,7 +115,7 @@ body {
   height: 64px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: #660088 #333333;
+  scrollbar-color: #660088 #202020;
 }
 
 .prompt-box::-webkit-scrollbar {
@@ -124,7 +124,7 @@ body {
 }
 
 .prompt-box::-webkit-scrollbar-track {
-  background: #333333;
+  background: #202020;
   border-radius: 4px;
 }
 
@@ -223,13 +223,13 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #0b0c10;
+  background: #333333;
 }
 
 ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.08);
   border-radius: 9999px;
-  border: 2px solid #0b0c10;
+  border: 2px solid #333333;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -238,74 +238,31 @@ body {
 
 body {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.08) #0b0c10;
+  scrollbar-color: rgba(255, 255, 255, 0.08) #333333;
 }
 
-/* HIGH-PERFORMANCE SCREEN HIGHLIGHT GLOWS AND FLOWING NAVIGATION STATES */
-@keyframes activeFlowGlow {
+/* Custom Blue Flow/Glow animations for Logo-PToonGo.png */
+@keyframes blueglowing {
   0% {
-    background-color: rgba(168, 85, 247, 0.08);
-    border-color: rgba(168, 85, 247, 0.25);
-    box-shadow: 0 0 6px rgba(168, 85, 247, 0.15), inset 0 0 3px rgba(168, 85, 247, 0.05);
+    filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.65)) drop-shadow(0 0 12px rgba(37, 99, 235, 0.4));
   }
   50% {
-    background-color: rgba(168, 85, 247, 0.18);
-    border-color: rgba(168, 85, 247, 0.7);
-    box-shadow: 0 0 16px rgba(168, 85, 247, 0.45), inset 0 0 8px rgba(168, 85, 247, 0.15);
+    filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.95)) drop-shadow(0 0 24px rgba(37, 99, 235, 0.75));
   }
   100% {
-    background-color: rgba(168, 85, 247, 0.08);
-    border-color: rgba(168, 85, 247, 0.25);
-    box-shadow: 0 0 6px rgba(168, 85, 247, 0.15), inset 0 0 3px rgba(168, 85, 247, 0.05);
+    filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.65)) drop-shadow(0 0 12px rgba(37, 99, 235, 0.4));
   }
 }
 
-@keyframes indigoFlowGlow {
-  0% {
-    background-color: rgba(99, 102, 241, 0.08);
-    border-color: rgba(99, 102, 241, 0.25);
-    box-shadow: 0 0 6px rgba(99, 102, 241, 0.15), inset 0 0 3px rgba(99, 102, 241, 0.05);
-  }
-  50% {
-    background-color: rgba(99, 102, 241, 0.18);
-    border-color: rgba(99, 102, 241, 0.7);
-    box-shadow: 0 0 16px rgba(99, 102, 241, 0.45), inset 0 0 8px rgba(99, 102, 241, 0.15);
-  }
-  100% {
-    background-color: rgba(99, 102, 241, 0.08);
-    border-color: rgba(99, 102, 241, 0.25);
-    box-shadow: 0 0 6px rgba(99, 102, 241, 0.15), inset 0 0 3px rgba(99, 102, 241, 0.05);
-  }
+.logo-blue-glow {
+  animation: blueglowing 3s ease-in-out infinite;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes blueFlowGlow {
-  0% {
-    background-color: rgba(59, 130, 246, 0.08);
-    border-color: rgba(59, 130, 246, 0.25);
-    box-shadow: 0 0 6px rgba(59, 130, 246, 0.15), inset 0 0 3px rgba(59, 130, 246, 0.05);
-  }
-  50% {
-    background-color: rgba(59, 130, 246, 0.18);
-    border-color: rgba(59, 130, 246, 0.7);
-    box-shadow: 0 0 16px rgba(59, 130, 246, 0.45), inset 0 0 8px rgba(59, 130, 246, 0.15);
-  }
-  100% {
-    background-color: rgba(59, 130, 246, 0.08);
-    border-color: rgba(59, 130, 246, 0.25);
-    box-shadow: 0 0 6px rgba(59, 130, 246, 0.15), inset 0 0 3px rgba(59, 130, 246, 0.05);
-  }
-}
-
-.glow-purple-active {
-  animation: activeFlowGlow 3s ease-in-out infinite;
-}
-
-.glow-indigo-active {
-  animation: indigoFlowGlow 3s ease-in-out infinite;
-}
-
-.glow-blue-active {
-  animation: blueFlowGlow 3s ease-in-out infinite;
+.logo-blue-glow:hover {
+  animation: none;
+  filter: drop-shadow(0 0 22px rgba(59, 130, 246, 1)) drop-shadow(0 0 44px rgba(37, 99, 235, 0.9)) brightness(1.4);
+  transform: scale(1.06);
 }
 
 

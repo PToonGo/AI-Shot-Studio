@@ -3,12 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { CameraMovement, MovementCategory, PromptResponse, LookCategory, CinematicLook } from './types';
 import { CAMERA_MOVEMENTS, CINEMATIC_LOOKS } from './data';
 import MovementDetail from './components/MovementDetail';
-import CinematicLookCard from './components/CinematicLookCard';
 import { 
   Search, 
   Sparkles, 
@@ -67,78 +66,6 @@ export default function App() {
   // Active user learning hub drawer state (for 'Learn How' button)
   const [showLearningHub, setShowLearningHub] = useState(false);
 
-  // Active section scroll tracking
-  const [activeSection, setActiveSection] = useState<string>('camera-movements-section');
-
-  useEffect(() => {
-    const sectionIds = ['camera-movements-section', 'looks-lighting-section', 'learning-hub'];
-    
-    const handleScroll = () => {
-      const elements = sectionIds.map(id => document.getElementById(id)).filter(Boolean) as HTMLElement[];
-      if (elements.length === 0) return;
-
-      // If scrolled to bottom, activate learning-hub
-      const isBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 120;
-      if (isBottom) {
-        setActiveSection('learning-hub');
-        return;
-      }
-
-      let currentActive = activeSection;
-      let minDistance = Infinity;
-
-      elements.forEach(el => {
-        const rect = el.getBoundingClientRect();
-        // Check if element is active in viewport
-        if (rect.top <= 350 && rect.bottom >= 150) {
-          const distance = Math.abs(rect.top - 120);
-          if (distance < minDistance) {
-            minDistance = distance;
-            currentActive = el.id;
-          }
-        }
-      });
-
-      if (currentActive && currentActive !== activeSection) {
-        setActiveSection(currentActive);
-      }
-    };
-
-    // Use IntersectionObserver as a fast trigger as well
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      {
-        root: null,
-        rootMargin: '-15% 0px -60% 0px',
-        threshold: 0,
-      }
-    );
-
-    sectionIds.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    // Trigger initial check
-    setTimeout(handleScroll, 100);
-
-    return () => {
-      sectionIds.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) observer.unobserve(el);
-      });
-      observer.disconnect();
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [activeSection]);
-
   // Filtered movements logic
   const filteredMovements = CAMERA_MOVEMENTS.filter((m) => {
     const matchesCategory = selectedCategory === 'All' || m.category === selectedCategory;
@@ -194,7 +121,7 @@ export default function App() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#0B0C10] text-[#E4E6EB] font-sans antialiased overflow-x-clip">
+    <div className="relative min-h-screen bg-[#333333] text-[#E4E6EB] font-sans antialiased overflow-x-clip">
       
       {/* BACKGROUND DECORATIVE GRID LINES FOR DEPTH */}
       <div className="absolute inset-x-0 top-0 h-full w-full pointer-events-none select-none z-0" id="ambient-design-grid">
@@ -206,7 +133,7 @@ export default function App() {
       </div>
 
       {/* 1. HEADER SECTION */}
-      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0E1015]/70 backdrop-blur-lg" id="main-studio-header">
+      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#333333]/50 backdrop-blur-xl" id="main-studio-header">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-[30px] flex items-center justify-between gap-4 relative">
           
           {/* Top-Left Logo Block */}
@@ -229,28 +156,37 @@ export default function App() {
             <img 
               src="/assets/Logo-PToonGo.png" 
               alt="Quang Phuong Master Header" 
-              className="h-[62px] w-auto object-contain rounded-md"
+              className="h-[62px] w-auto object-contain rounded-md logo-blue-glow pointer-events-auto cursor-pointer"
               referrerPolicy="no-referrer"
             />
           </div>
 
+          {/* Center Dynamic Banner Ad Area */}
+          <div className="hidden md:flex bg-[#202020]/95 border border-white/5 rounded-xl overflow-hidden p-[3px] items-center shrink-0">
+            <button
+              onClick={() => setShowLearningHub(true)}
+              className="flex items-center gap-1.5 text-xs bg-red-600 hover:bg-red-500 active:bg-red-700 text-white font-bold px-3 py-1.5 rounded-md transition-all shadow-[0_0_15px_rgba(239,68,68,0.2)] tracking-wider shrink-0 cursor-pointer"
+            >
+              <span>DISCOVER NOW</span>
+              <Play className="w-3 h-3 fill-current" />
+            </button>
+          </div>
+
+
+
         </div>
 
         {/* Quick Jump Navigation Menu Bar */}
-        <div className="border-t border-white/10 bg-[#0B0C10]/70 backdrop-blur-md">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-wrap items-center justify-center gap-y-2 gap-x-2 sm:gap-x-6 md:gap-x-10">
+        <div className="border-t border-white/10 bg-[#202020]/85 backdrop-blur-md">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-center gap-2 sm:gap-6 md:gap-10">
             <button
               onClick={() => {
                 const el = document.getElementById('camera-movements-section');
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
               }}
-              className={`flex items-center gap-1.5 sm:gap-2.5 text-[11px] sm:text-xs font-bold transition-all tracking-wider uppercase cursor-pointer group px-2.5 sm:px-4 py-1.5 rounded-lg border ${
-                activeSection === 'camera-movements-section'
-                  ? 'text-white bg-purple-500/10 border-purple-500/20 shadow-[0_0_12px_rgba(168,85,247,0.15)] font-extrabold glow-purple-active'
-                  : 'text-gray-400 border-transparent hover:text-white hover:bg-white/5 active:bg-white/10'
-              }`}
+              className="flex items-center gap-1.5 sm:gap-2.5 text-[11px] sm:text-xs font-bold text-gray-400 hover:text-white hover:bg-white/5 active:bg-white/10 px-2.5 sm:px-4 py-1.5 rounded-lg transition-all tracking-wider uppercase cursor-pointer group"
             >
-              <Compass className={`w-3.5 sm:w-4 h-3.5 sm:h-4 text-purple-400 group-hover:scale-110 group-hover:rotate-12 transition-transform ${activeSection === 'camera-movements-section' ? 'scale-110 rotate-6' : ''}`} />
+              <Compass className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-purple-400 group-hover:scale-110 group-hover:rotate-12 transition-transform" />
               <span>Camera Movements</span>
               <span className="hidden sm:inline-block bg-purple-500/20 text-purple-400 text-[9px] px-1.5 py-0.5 rounded-md font-mono">44</span>
             </button>
@@ -260,13 +196,9 @@ export default function App() {
                 const el = document.getElementById('looks-lighting-section');
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
               }}
-              className={`flex items-center gap-1.5 sm:gap-2.5 text-[11px] sm:text-xs font-bold transition-all tracking-wider uppercase cursor-pointer group px-2.5 sm:px-4 py-1.5 rounded-lg border ${
-                activeSection === 'looks-lighting-section'
-                  ? 'text-white bg-indigo-500/10 border-indigo-500/20 shadow-[0_0_12px_rgba(99,102,241,0.15)] font-extrabold glow-indigo-active'
-                  : 'text-gray-400 border-transparent hover:text-white hover:bg-white/5 active:bg-white/10'
-              }`}
+              className="flex items-center gap-1.5 sm:gap-2.5 text-[11px] sm:text-xs font-bold text-gray-400 hover:text-white hover:bg-white/5 active:bg-white/10 px-2.5 sm:px-4 py-1.5 rounded-lg transition-all tracking-wider uppercase cursor-pointer group"
             >
-              <Sparkles className={`w-3.5 sm:w-4 h-3.5 sm:h-4 text-indigo-400 group-hover:scale-110 group-hover:rotate-12 transition-transform ${activeSection === 'looks-lighting-section' ? 'scale-110 rotate-12' : ''}`} />
+              <Sparkles className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-indigo-400 group-hover:scale-110 group-hover:rotate-12 transition-transform" />
               <span>Cinematic Looks</span>
               <span className="hidden sm:inline-block bg-indigo-500/20 text-indigo-400 text-[9px] px-1.5 py-0.5 rounded-md font-mono">27</span>
             </button>
@@ -276,22 +208,10 @@ export default function App() {
                 const el = document.getElementById('learning-hub');
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
               }}
-              className={`flex items-center gap-1.5 sm:gap-2.5 text-[11px] sm:text-xs font-bold transition-all tracking-wider uppercase cursor-pointer group px-2.5 sm:px-4 py-1.5 rounded-lg border ${
-                activeSection === 'learning-hub'
-                  ? 'text-white bg-blue-500/10 border-blue-500/20 shadow-[0_0_12px_rgba(59,130,246,0.15)] font-extrabold glow-blue-active'
-                  : 'text-gray-400 border-transparent hover:text-white hover:bg-white/5 active:bg-white/10'
-              }`}
+              className="flex items-center gap-1.5 sm:gap-2.5 text-[11px] sm:text-xs font-bold text-gray-400 hover:text-white hover:bg-white/5 active:bg-white/10 px-2.5 sm:px-4 py-1.5 rounded-lg transition-all tracking-wider uppercase cursor-pointer group"
             >
-              <GraduationCap className={`w-4 sm:w-4.5 h-4 sm:h-4.5 text-blue-400 group-hover:scale-110 transition-transform ${activeSection === 'learning-hub' ? 'scale-110' : ''}`} />
+              <GraduationCap className="w-4 sm:w-4.5 h-4 sm:h-4.5 text-blue-400 group-hover:scale-110 transition-transform" />
               <span>Learning Hub</span>
-            </button>
-            <div className="w-px h-4 bg-white/10" />
-            <button
-              onClick={() => setShowLearningHub(true)}
-              className="flex items-center gap-1.5 text-xs bg-red-600 hover:bg-red-500 active:bg-red-700 text-white font-bold px-3 py-1.5 rounded-lg transition-all shadow-[0_0_15px_rgba(239,68,68,0.2)] tracking-wider shrink-0 cursor-pointer group"
-            >
-              <span>DISCOVER NOW</span>
-              <Play className="w-3 h-3 fill-current group-hover:scale-110 group-hover:translate-x-0.5 transition-transform" />
             </button>
           </div>
         </div>
@@ -382,7 +302,7 @@ export default function App() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2 bg-[#121319] border border-white/5 rounded-lg px-3 py-1.5 self-start">
+          <div className="flex items-center gap-2 bg-[#202020] border border-white/5 rounded-lg px-3 py-1.5 self-start">
             <Activity className="w-4 h-4 text-purple-400 animate-pulse" />
             <span className="text-xs font-mono text-gray-400 uppercase tracking-widest leading-none">
               DB_REGISTRY: ACTIVE
@@ -402,7 +322,7 @@ export default function App() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search movements (e.g. 'Dolly', 'Orbit')..."
-              className="w-full bg-[#121319] hover:bg-[#161720]/80 focus:bg-[#161720] border border-white/10 focus:border-purple-500 rounded-full py-4 pl-12 pr-6 text-sm text-white placeholder-gray-500 focus:outline-none focus:shadow-[0_0_20px_rgba(168,85,247,0.15)] transition-all"
+              className="w-full bg-[#202020] hover:bg-[#2e2e2e] focus:bg-[#2e2e2e] border border-white/10 focus:border-purple-500 rounded-full py-4 pl-12 pr-6 text-sm text-white placeholder-gray-400 focus:outline-none focus:shadow-[0_0_20px_rgba(168,85,247,0.15)] transition-all"
             />
           </div>
 
@@ -416,8 +336,8 @@ export default function App() {
                   onClick={() => setSelectedCategory(cat)}
                   className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-200 cursor-pointer ${
                     active 
-                      ? 'bg-white text-[#0B0C10] shadow-lg font-bold scale-[1.03]' 
-                      : 'bg-[#121319] hover:bg-[#1C1D26] text-gray-400 hover:text-white border border-white/5'
+                      ? 'bg-white text-[#333333] shadow-lg font-bold scale-[1.03]' 
+                      : 'bg-[#202020] hover:bg-[#2a2a2a] text-gray-400 hover:text-white border border-white/5'
                   }`}
                 >
                   {cat}
@@ -439,7 +359,7 @@ export default function App() {
           </div>
 
           {filteredMovements.length === 0 ? (
-            <div className="text-center py-20 bg-[#121319] border border-white/5 rounded-2xl">
+            <div className="text-center py-20 bg-[#202020] border border-white/5 rounded-2xl">
               <Compass className="w-10 h-10 text-gray-600 mx-auto mb-3" />
               <p className="text-gray-400 font-medium mb-1">No custom movements found matching &quot;{searchQuery}&quot;</p>
               <button 
@@ -553,7 +473,7 @@ export default function App() {
               value={lookSearchQuery}
               onChange={(e) => setLookSearchQuery(e.target.value)}
               placeholder="Search aesthetics (e.g. 'Cyberpunk', 'Neon', 'Vintage')..."
-              className="w-full bg-[#121319] hover:bg-[#161720]/80 focus:bg-[#161720] border border-white/10 focus:border-purple-500 rounded-full py-4 pl-12 pr-6 text-sm text-white placeholder-gray-500 focus:outline-none focus:shadow-[0_0_20px_rgba(168,85,247,0.15)] transition-all"
+              className="w-full bg-[#202020] hover:bg-[#2e2e2e] focus:bg-[#2e2e2e] border border-white/10 focus:border-purple-500 rounded-full py-4 pl-12 pr-6 text-sm text-white placeholder-gray-400 focus:outline-none focus:shadow-[0_0_20px_rgba(168,85,247,0.15)] transition-all"
             />
           </div>
 
@@ -567,8 +487,8 @@ export default function App() {
                   onClick={() => setSelectedLookCategory(cat)}
                   className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-200 cursor-pointer ${
                     active 
-                      ? 'bg-white text-[#0B0C10] shadow-lg font-bold scale-[1.03]' 
-                      : 'bg-[#121319] hover:bg-[#1C1D26] text-gray-400 hover:text-white border border-white/5'
+                      ? 'bg-white text-[#333333]' 
+                      : 'bg-[#202020] hover:bg-[#2e2e2e] text-gray-400 hover:text-white border border-white/5'
                   }`}
                 >
                   {cat}
@@ -590,7 +510,7 @@ export default function App() {
           </div>
 
           {filteredLooks.length === 0 ? (
-            <div className="text-center py-20 bg-[#121319] border border-white/5 rounded-2xl">
+            <div className="text-center py-20 bg-[#202020] border border-white/5 rounded-2xl">
               <Sparkles className="w-10 h-10 text-gray-600 mx-auto mb-3" />
               <p className="text-gray-400 font-medium mb-1">No cinematic looks found matching &quot;{lookSearchQuery}&quot;</p>
               <button 
@@ -602,21 +522,82 @@ export default function App() {
             </div>
           ) : (
             <div className="movement-grid" id="looksGrid">
-              {filteredLooks.map((look, idx) => (
-                <CinematicLookCard
-                  key={look.id}
-                  look={look}
-                  idx={idx}
-                  copiedLookId={copiedLookId}
-                  onCopyLook={handleCopyLook}
-                />
-              ))}
+              {filteredLooks.map((look, idx) => {
+                return (
+                  <motion.div
+                    key={look.id}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: Math.min(idx * 0.05, 0.4), duration: 0.3 }}
+                    onMouseEnter={(e) => {
+                      const video = e.currentTarget.querySelector('video');
+                      if (video) {
+                        video.preload = "auto";
+                        video.play().catch(err => console.log("Hover play blocked:", err));
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      const video = e.currentTarget.querySelector('video');
+                      if (video) {
+                        video.pause();
+                      }
+                    }}
+                    className="move-card"
+                    data-category={look.category === 'Cinema Legends' ? 'legends' : look.category === 'Film Stocks' ? 'film-stocks' : look.category === 'Lighting' ? 'lighting' : 'stylized'}
+                    style={{ display: 'flex' }}
+                  >
+                    <div className="video-wrapper">
+                      <video 
+                        className="smart-video" 
+                        loop 
+                        muted 
+                        playsInline 
+                        preload="metadata"
+                        src={look.video}
+                        data-src={look.video} 
+                        data-full-src={look.videoFull} 
+                      />
+                    </div>
+                    <div className="card-content">
+                      <h3 
+                        className="move-name fusion-responsive-typography-calculated" 
+                        data-fontsize="28" 
+                        data-lineheight="33.6px" 
+                        style={{ '--fontSize': 28, lineHeight: 1.2 } as any}
+                      >
+                        {look.title}
+                      </h3>
+                      <div className="prompt-container">
+                        <div className="prompt-box">
+                          {look.description}
+                        </div>
+                        <button 
+                          className="copy-icon-btn" 
+                          onClick={(e) => handleCopyLook(e, look.id, look.description)}
+                          title="Copy aesthetic prompt"
+                        >
+                          {copiedLookId === look.id ? (
+                            <svg viewBox="0 0 24 24" className="icon-check">
+                              <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                          ) : (
+                            <svg viewBox="0 0 24 24" className="icon-copy">
+                              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
           )}
         </div>
 
         {/* 4. SEAMLESS TUTORIAL HUB */}
-        <section className="bg-[#121319] border border-white/5 p-6 sm:p-8 mt-10 rounded-2xl relative overflow-hidden flex flex-col lg:flex-row gap-6 lg:items-center justify-between scroll-mt-28" id="learning-hub">
+        <section className="bg-[#202020] border border-white/5 p-6 sm:p-8 mt-12 rounded-2xl relative overflow-hidden flex flex-col lg:flex-row gap-6 lg:items-center justify-between scroll-mt-28" id="learning-hub">
           {/* Ambient lighting ball behind info card */}
           <div className="absolute -top-24 -right-24 w-48 h-48 rounded-full bg-purple-500/10 blur-3xl pointer-events-none" />
           
@@ -640,7 +621,7 @@ export default function App() {
       </main>
 
       {/* FOOTER METRIC BRAND BANNER */}
-      <footer className="border-t border-white/5 bg-[#08090C] pt-8 pb-[30px] mt-20 relative z-10 select-none">
+      <footer className="border-t border-white/5 bg-[#202020] pt-8 pb-[30px] mt-20 relative z-10 select-none">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-mono text-gray-500">
           <div className="flex items-center gap-2">
             <span className="text-purple-500 font-bold">&bull;</span>
