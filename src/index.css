@@ -262,6 +262,9 @@ body {
   -webkit-backface-visibility: hidden;
   transform: translate3d(0, 0, 0);
   image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  max-width: 100%;
+  object-fit: contain;
 }
 
 .logo-blue-glow:hover {
